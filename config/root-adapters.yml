@@ -1,0 +1,69 @@
+schema_version: 1
+purpose: "Temporary-root adapter catalogue. Entries are metadata only; no exploit payloads are bundled by this manifest."
+policy:
+  exact_device_build_match_required: true
+  require_upstream_license_review: true
+  require_payload_hash_and_provenance: true
+  unknown_or_mismatched_profiles_must_be_blocked: true
+  never_unlock_bootloader_or_flash_boot_partitions: true
+
+root_framework:
+  name: KernelSU
+  repository: https://github.com/tiann/KernelSU
+  pinned_commit: eeb3bbf8359434f5596b8a7875b54ac4e5fc5495
+  license:
+    kernel: GPL-2.0-only
+    other_components: GPL-3.0-or-later
+  role: root-management-framework
+  status: source-import-workflow-added
+
+temporary_root_adapters:
+  - id: shark
+    repository: https://github.com/kpgc10kai/Shark
+    brands: [OnePlus, OPPO, Realme, Xiaomi, iQOO]
+    license_review: required
+    device_profile_review: required
+  - id: ghostlock
+    repository: https://github.com/EV-Toolkit/GhostLock
+    brands: [multiple-device-specific-ports]
+    license_review: required-per-port
+    device_profile_review: exact-uname-and-firmware-required
+  - id: dirtyfrag
+    repository: https://github.com/evdenis/DirtyFrag
+    brands: [multiple-device-specific-ports]
+    license_review: required
+    device_profile_review: exact-vulnerable-build-required
+  - id: root-my-galaxy
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [Samsung]
+    license_review: required-per-implementation
+    device_profile_review: exact-model-and-firmware-required
+  - id: root-my-pixel
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [Google Pixel]
+    license_review: required-per-implementation
+    device_profile_review: exact-model-and-firmware-required
+  - id: rootmyvivo
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [vivo, iQOO]
+    license_review: required-per-implementation
+    device_profile_review: exact-model-and-firmware-required
+  - id: dfroot
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [multiple-device-specific-ports]
+    license_review: required-per-implementation
+    device_profile_review: exact-vulnerable-build-required
+  - id: honor-anb-root
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [HONOR]
+    license_review: required-per-implementation
+    device_profile_review: exact-model-and-firmware-required
+  - id: timerroot
+    repository: https://github.com/fynks/awesome-temporary-root
+    brands: [Google Pixel, Samsung, selected-Xiaomi]
+    license_review: required-per-implementation
+    device_profile_review: exact-kernel-and-page-size-required
+
+discovery_index:
+  repository: https://github.com/fynks/awesome-temporary-root
+  note: "Use the live device tables for discovery; this index is not a compatibility guarantee."
