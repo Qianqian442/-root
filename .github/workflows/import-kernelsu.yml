@@ -1,0 +1,35 @@
+name: Import complete KernelSU source
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-kernelsu.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  vendor-kernelsu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch pinned upstream KernelSU source
+        run: |
+          git clone https://github.com/tiann/KernelSU.git /tmp/KernelSU
+          git -C /tmp/KernelSU checkout eeb3bbf8359434f5596b8a7875b54ac4e5fc5495
+          mkdir -p third_party/KernelSU
+          rsync -a --delete --exclude=.git /tmp/KernelSU/ third_party/KernelSU/
+      - name: Commit vendored source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add third_party/KernelSU
+          if git diff --cached --quiet; then
+            echo "KernelSU source is already up to date."
+          else
+            git commit -m "vendor: import complete KernelSU upstream source"
+            git push
+          fi
