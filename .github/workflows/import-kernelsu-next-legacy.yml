@@ -1,0 +1,46 @@
+name: Import KernelSU Next legacy 4.14 backend
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-kernelsu-next-legacy.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  vendor-kernelsu-next-legacy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch pinned KernelSU Next legacy source
+        run: |
+          git clone https://github.com/KernelSU-Next/KernelSU-Next.git /tmp/KernelSU-Next
+          git -C /tmp/KernelSU-Next checkout e5f5ec998de88b9fc43c62cff8f7ae12d3f4800a
+          mkdir -p third_party/KernelSU-Next-Legacy
+          rsync -a --delete --exclude=.git /tmp/KernelSU-Next/ /tmp/ksunext-stage/
+          rsync -a --delete /tmp/ksunext-stage/ third_party/KernelSU-Next-Legacy/
+          printf '%s\n' 'Upstream: https://github.com/KernelSU-Next/KernelSU-Next' 'Branch: legacy' 'Commit: e5f5ec998de88b9fc43c62cff8f7ae12d3f4800a' > third_party/KernelSU-Next-Legacy/UPSTREAM_PIN.txt
+      - name: Commit vendored source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add third_party/KernelSU-Next-Legacy
+          if git diff --cached --quiet; then
+            echo "KernelSU Next legacy source is already up to date."
+          else
+            git commit -m "vendor: add KernelSU Next legacy 4.14 backend source"
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Could not push after three rebase attempts."
+            exit 1
+          fi
