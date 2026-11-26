@@ -44,6 +44,9 @@ public class MainActivity extends Activity {
         status.setTextColor(0xFF9A5B00);
         page.addView(status);
 
+        String kernelInfo = readKernel();
+        boolean isLegacy414 = kernelInfo.contains("4.14");
+
         TextView device = new TextView(this);
         device.setText("\n设备信息\n型号：" + Build.MODEL
                 + "\n设备代号：" + Build.DEVICE
@@ -51,13 +54,18 @@ public class MainActivity extends Activity {
                 + "\nAndroid：" + Build.VERSION.RELEASE
                 + "\nSDK：" + Build.VERSION.SDK_INT
                 + "\nABI：" + (Build.SUPPORTED_ABIS.length > 0 ? Build.SUPPORTED_ABIS[0] : "未知")
-                + "\n内核：" + readKernel());
+                + "\n内核：" + kernelInfo);
         device.setTextSize(14);
         device.setTextColor(0xFF263247);
         page.addView(device);
 
         TextView note = new TextView(this);
-        note.setText("\n适配原则\n仅在设备型号、完整内核版本、系统指纹和补丁状态均匹配已验证配置时，才会开放对应适配器。KernelSU 管理核心与临时 Root 执行链分离。\n\n下一步：导入并核验 KernelSU 上游源码、许可证及构建流程。");
+        String legacyStatus = isLegacy414
+                ? "\n\n旧内核检测：发现 Linux 4.14 系列。已登记 4.14.186 候选项目：Realme GT Neo（MT6893）GhostLock Stage-1、Fire TV kara 专用 GhostLock。它们不是 PEMM00/MT6833 配置，当前不能用于本机。"
+                : "";
+        note.setText("\n适配原则\n仅在设备型号、完整内核版本、系统指纹和补丁状态均匹配已验证配置时，才会开放对应适配器。KernelSU 管理核心与临时 Root 执行链分离。"
+                + legacyStatus
+                + "\n\n本机目标：OPPO A55 5G（PEMM00 / MT6833）。目前尚无已验证的本机临时 Root 配置；不会套用其他机型偏移，也不会自动运行不匹配的利用链。");
         note.setTextSize(14);
         note.setTextColor(0xFF46536A);
         page.addView(note);
