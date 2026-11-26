@@ -31,5 +31,16 @@ jobs:
             echo "KernelSU source is already up to date."
           else
             git commit -m "vendor: import complete KernelSU upstream source"
-            git push
+            # Other pushes may land while this large source tree is being prepared.
+            # Rebase on the latest main and retry to avoid a non-fast-forward failure.
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Could not push after three rebase attempts."
+            exit 1
           fi
