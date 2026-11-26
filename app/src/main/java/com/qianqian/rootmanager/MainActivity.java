@@ -70,6 +70,38 @@ public class MainActivity extends Activity {
         note.setTextColor(0xFF46536A);
         page.addView(note);
 
+
+        TextView adbTitle = new TextView(this);
+        adbTitle.setText("\\n无线 ADB 中转");
+        adbTitle.setTextSize(20);
+        adbTitle.setTextColor(0xFF172033);
+        page.addView(adbTitle);
+
+        TextView adbInfo = new TextView(this);
+        adbInfo.setText("用于后续临时提权适配的通信通道。ADB 配对本身不会授予 Root。请在本机开发者选项中开启无线调试，并使用可信的配对客户端完成配对。配对成功后仍需单独验证 shell 权限与提权能力。");
+        adbInfo.setTextSize(14);
+        adbInfo.setTextColor(0xFF46536A);
+        page.addView(adbInfo);
+
+        android.widget.Button adbSettings = new android.widget.Button(this);
+        adbSettings.setText("打开开发者选项");
+        adbSettings.setOnClickListener(v -> {
+            try {
+                startActivity(new android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+            } catch (Exception e) {
+                try {
+                    startActivity(new android.content.Intent(android.provider.Settings.ACTION_SETTINGS));
+                } catch (Exception ignored) { }
+            }
+        });
+        page.addView(adbSettings);
+
+        TextView adbStatus = new TextView(this);
+        adbStatus.setText("\\nADB 状态：尚未建立配对会话\\n下一步：接入 Shizuku/ADB transport，并在用户授权后执行只读设备诊断。当前构建不会伪称已配对，也不会执行 Root 命令。");
+        adbStatus.setTextSize(13);
+        adbStatus.setTextColor(0xFF9A5B00);
+        page.addView(adbStatus);
+
         ScrollView scroll = new ScrollView(this);
         scroll.addView(page);
         setContentView(scroll);
