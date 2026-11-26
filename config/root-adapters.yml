@@ -17,6 +17,36 @@ root_framework:
   role: root-management-framework
   status: source-import-workflow-added
 
+legacy_kernel_414_candidates:
+  - id: ghostlock-rmx3031
+    repository: https://github.com/rubnet/ghostlock-RMX3031
+    kernel_family: "4.14.186+"
+    soc: MediaTek MT6893
+    target_device: Realme GT Neo RMX3031
+    upstream_status: experimental-stage-1
+    license_review: required-no-license-file-confirmed
+    device_profile_review: not-transferable-to-oppo-a55
+    use_policy: research-only-until-license-and-target-validation
+  - id: ghostlock-firetv-kara
+    repository: https://github.com/R0rt1z2/GhostLock
+    kernel_family: "4.14"
+    target_device: Amazon Fire TV Stick 4K Max 1st Gen kara
+    upstream_status: device-specific
+    license_review: required
+    device_profile_review: not-transferable-to-oppo-a55
+    use_policy: research-only-until-license-and-target-validation
+
+target_device:
+  model: OPPO A55 5G
+  device_code: PEMM00
+  soc: MediaTek Dimensity 700 MT6833
+  android: 12
+  kernel_release: "4.14.186"
+  bootloader_unlock_allowed: false
+  computer_required: false
+  current_compatibility: unverified
+  profile_policy: never-reuse-offsets-from-different-soc-or-device
+
 temporary_root_adapters:
   - id: shark
     repository: https://github.com/kpgc10kai/Shark
