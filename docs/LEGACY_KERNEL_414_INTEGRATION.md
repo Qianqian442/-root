@@ -40,3 +40,24 @@ The RMX3031 project is the closest kernel-version lead because it names 4.14.186
 - The UI explains that these candidates are not verified for PEMM00 and does not expose a run action for them.
 - No 4.14 exploit payload is bundled or executed yet.
 - A usable, legally reusable, device-matched PEMM00/MT6833 implementation has not been found or validated.
+
+
+## KernelSU backend for legacy 4.14
+
+The current upstream KernelSU project has dropped official non-GKI support in newer releases. The separate KernelSU Next `legacy` branch retains the legacy-kernel integration path and documents support backported to 4.14 and earlier:
+https://github.com/KernelSU-Next/KernelSU-Next/tree/legacy
+
+Pinned source selected for reproducible import:
+- Repository: https://github.com/KernelSU-Next/KernelSU-Next
+- Branch: `legacy`
+- Commit: `e5f5ec998de88b9fc43c62cff8f7ae12d3f4800a`
+- License: GPL-3.0
+
+This is the kernel-side Root backend, not a privilege-escalation exploit and not a standalone installable driver APK. The source can be vendored into this project, but it only becomes operational after integration with the exact OPPO kernel source, successful kernel build, and a supported installation path. KernelSU's documented non-GKI workflow requires building a device-specific kernel; the official FAQ also says KernelSU installation requires an unlocked bootloader. Therefore this backend does **not** satisfy the owner's no-bootloader-unlock requirement by itself.
+
+For PEMM00 / MT6833 / 4.14.186:
+- Import the legacy backend source as a separate component.
+- Keep the device adapter disabled until the exact kernel source/config and integration are validated.
+- Do not label the app as rooted merely because the backend source exists.
+- Do not package an unverified boot image or recommend flashing it.
+- This source import does not create a no-PC, no-unlock temporary-root exploit. A separate, legally reusable and exact-build-matched temporary privilege-escalation chain is still required for that goal.
